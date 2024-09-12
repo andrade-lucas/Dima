@@ -484,4 +484,4 @@ $RECYCLE.BIN/
 *.swp
 
 # appsettings
-# appsettings.Development.json
+appsettings.Development.json
