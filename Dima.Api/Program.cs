@@ -4,7 +4,6 @@ using Dima.Core.Handlers;
 using Dima.Core.Models;
 using Dima.Core.Requests.Categories;
 using Dima.Core.Responses;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,9 +27,36 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.MapGet(
+        "/v1/categories", 
+        async (ICategoryHandler handler) => {
+            var request = new GetAllCategoriesRequest
+            {
+                UserId = "test@balta.io"
+            };
+            return await handler.GetAllAsync(request);
+        })
+    .WithName("Categories: Get All")
+    .WithSummary("Obter todas as categorias de um usuário")
+    .Produces<PagedResponse<List<Category>?>>();
+
+app.MapGet(
+        "/v1/categories/{id}", 
+        async (long id, ICategoryHandler handler) => {
+            var request = new GetCategoryByIdRequest
+            {
+                Id = id,
+                UserId = "test@balta.io"
+            };
+            return await handler.GetByIdAsync(request);
+        })
+    .WithName("Categories: Get By Id")
+    .WithSummary("Obter categoria por Id")
+    .Produces<Response<Category?>>();
+
 app.MapPost(
         "/v1/categories", 
-        (CreateCategoryRequest request, ICategoryHandler handler) => handler.CreateAsync(request)
+        async (CreateCategoryRequest request, ICategoryHandler handler) => await handler.CreateAsync(request)
     )
     .WithName("Categories: Create")
     .WithSummary("Cria uma nova categoria")
@@ -38,9 +64,9 @@ app.MapPost(
 
 app.MapPut(
         "/v1/categories/{id}", 
-        (long id, UpdateCategoryRequest request, ICategoryHandler handler) => {
+        async (long id, UpdateCategoryRequest request, ICategoryHandler handler) => {
             request.Id = id;
-            handler.UpdateAsync(request);
+            return await handler.UpdateAsync(request);
         })
     .WithName("Categories: Update")
     .WithSummary("Atualiza uma nova categoria")
@@ -48,9 +74,13 @@ app.MapPut(
 
 app.MapDelete(
         "/v1/categories/{id}", 
-        (long id, [FromBody]DeleteCategoryRequest request, ICategoryHandler handler) => {
-            request.Id = id;
-            handler.DeleteAsync(request);
+        async (long id, ICategoryHandler handler) => {
+            var request = new DeleteCategoryRequest
+            {
+                Id = id,
+                UserId = "test@balta.io"
+            };
+            return await handler.DeleteAsync(request);
         })
     .WithName("Categories: Delete")
     .WithSummary("Deleta uma nova categoria")
