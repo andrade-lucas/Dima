@@ -57,14 +57,49 @@ public class CategoryHandler(AppDbContext context) : ICategoryHandler
         }
     }
 
-    public Task<Response<List<Category>>> GetAllAsync(GetAllCategoriesRequest request)
+    public async Task<PagedResponse<List<Category>>> GetAllAsync(GetAllCategoriesRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var query = context
+                .Categories
+                .AsNoTracking()
+                .Where(x => x.UserId == request.UserId)
+                .OrderBy(x => x.Title);
+                
+            var categories = await query
+                .Skip((request.PageNumber - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .ToListAsync();
+
+            var count = await query.CountAsync();
+
+            return new PagedResponse<List<Category>>(categories, count, request.PageNumber, request.PageSize);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return new PagedResponse<List<Category>>(null, 500, "Ocorreu um erro ao obter categorias");
+        }
     }
 
-    public Task<Response<Category?>> GetByIdAsync(GetCategoryByIdRequest request)
+    public async Task<Response<Category?>> GetByIdAsync(GetCategoryByIdRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var category = await context.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.Id && x.UserId == request.UserId);
+
+            return category is null
+                ? new Response<Category?>(null, 404, "Categoria não encontrada")
+                : new Response<Category?>(category, message: "Categoria deletada com sucesso");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Erro ao obter categoria pelo id {0}", request.Id);
+            return new Response<Category?>(null, 404, "Categoria não encontrada");
+        }
     }
 
     public async Task<Response<Category?>> UpdateAsync(UpdateCategoryRequest request)
