@@ -24,7 +24,7 @@ public class UpdateCategoryEndpoint : IEndpoint
         var result = await handler.UpdateAsync(request);
 
         return result.IsSuccess
-            ? TypedResults.Ok(new Response<Category?>(result.Data))
-            : TypedResults.BadRequest(new Response<Category?>(null, message: "Erro ao atualizar categoria"));
+            ? TypedResults.Ok(result)
+            : TypedResults.BadRequest(result);
     }
 }
