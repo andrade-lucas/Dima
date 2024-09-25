@@ -1,4 +1,5 @@
 using Dima.Api.Common.Api;
+using Dima.Core;
 using Dima.Core.Handlers;
 using Dima.Core.Models;
 using Dima.Core.Requests.Categories;
@@ -20,8 +21,8 @@ public class GetAllCategoriesEndpoint : IEndpoint
 
     public static async Task<IResult> HandleAsync(
         ICategoryHandler handler, 
-        [FromQuery]int pageNumber, 
-        [FromQuery]int pageSize
+        [FromQuery]int pageNumber = Configuration.DefaultPageNumber, 
+        [FromQuery]int pageSize = Configuration.DefaultPageSize
     )
     {
         var request = new GetAllCategoriesRequest
@@ -33,7 +34,7 @@ public class GetAllCategoriesEndpoint : IEndpoint
         var result = await handler.GetAllAsync(request);
 
         return result.IsSuccess
-            ? TypedResults.Ok(new PagedResponse<List<Category>?>(result.Data))
-            : TypedResults.BadRequest(new Response<Category?>(null, message: "Erro ao atualizar categoria"));
+            ? TypedResults.Ok(result)
+            : TypedResults.BadRequest(result);
     }
 }
