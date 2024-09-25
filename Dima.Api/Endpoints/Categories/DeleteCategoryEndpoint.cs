@@ -27,7 +27,7 @@ public class DeleteCategoryEndpoint : IEndpoint
         var result = await handler.DeleteAsync(request);
 
         return result.IsSuccess
-            ? TypedResults.Ok(new Response<Category?>(result.Data))
-            : TypedResults.BadRequest(new Response<Category?>(null, message: "Erro ao atualizar categoria"));
+            ? TypedResults.Ok(result)
+            : TypedResults.BadRequest(result);
     }
 }
