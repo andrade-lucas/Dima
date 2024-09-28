@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Dima.Api.Data.Mappings;
+namespace Dima.Api.Data.Mappings.Identity;
 
 public class IdentityUserMapping : IEntityTypeConfiguration<User>
 {
@@ -11,7 +11,7 @@ public class IdentityUserMapping : IEntityTypeConfiguration<User>
     {
         if (builder == null) throw new ArgumentNullException(nameof(builder));
 
-        builder.ToTable("User");
+        builder.ToTable("IdentityUser");
         builder.HasKey(x => x.Id);
 
         builder.HasIndex(x => x.NormalizedUserName).IsUnique();
