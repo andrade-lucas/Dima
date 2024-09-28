@@ -95,7 +95,7 @@ public class CategoryHandler(AppDbContext context) : ICategoryHandler
                 ? new Response<Category?>(null, 404, "Categoria não encontrada")
                 : new Response<Category?>(category, message: "Categoria deletada com sucesso");
         }
-        catch (Exception ex)
+        catch
         {
             Console.WriteLine("Erro ao obter categoria pelo id {0}", request.Id);
             return new Response<Category?>(null, 404, "Categoria não encontrada");
