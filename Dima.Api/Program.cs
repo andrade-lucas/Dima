@@ -29,7 +29,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/", () => new { message = "OK" });
+app.MapGet("/", () => new { message = "OK" }).WithTags("Health Check");
 app.MapEndpoints();
 
 app.Run();
