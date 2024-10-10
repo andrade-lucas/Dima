@@ -1,7 +1,7 @@
 ﻿using Dima.Core.Handlers;
 using Dima.Core.Requests.Account;
+using Dima.Web.Security;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 
 namespace Dima.Web.Pages.Identity;
@@ -19,7 +19,7 @@ public class RegisterPage : ComponentBase
     public NavigationManager NavigationManager { get; set; } = null!;
 
     [Inject]
-    public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+    public ICookieAuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
     #endregion
 
     #region Properties
@@ -38,7 +38,7 @@ public class RegisterPage : ComponentBase
     }
     #endregion
 
-    #region
+    #region Methods
     public async Task OnValidSubmitAsync()
     {
         IsBusy = true;
@@ -47,7 +47,10 @@ public class RegisterPage : ComponentBase
             var result = await Handler.RegisterAsync(InputModel);
 
             if (result.IsSuccess)
+            {
+                Snackbar.Add("Usuário cadastrado com sucesso", Severity.Success);
                 NavigationManager.NavigateTo("/login");
+            }
             else
                 Snackbar.Add(result.Message, Severity.Error);
         }

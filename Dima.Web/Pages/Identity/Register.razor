@@ -11,7 +11,7 @@
                 <img width="200" src="imgs/dima.png" alt="Dima - Controle Financeiro" />
             </div>
 
-            <EditForm @Model="@InputModel" OnValidSubmit="@OnValidSubmitAsync">
+            <EditForm Model="@InputModel" OnValidSubmit="@OnValidSubmitAsync">
                 <DataAnnotationsValidator />
 
                 <MudTextField T="string"
@@ -35,7 +35,7 @@
                     }
                     else
                     {
-                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Registrar</MudButton>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
                         <MudSpacer />
                         <MudButton Href="/login">Já tenho uma conta</MudButton>
                     }
