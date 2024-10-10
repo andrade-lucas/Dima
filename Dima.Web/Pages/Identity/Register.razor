@@ -11,26 +11,36 @@
                 <img width="200" src="imgs/dima.png" alt="Dima - Controle Financeiro" />
             </div>
 
-            <MudForm @ref="MudForm">
+            <EditForm @Model="@InputModel" OnValidSubmit="@OnValidSubmitAsync">
+                <DataAnnotationsValidator />
+
                 <MudTextField T="string"
                               Label="E-mail"
+                              HelperText="Campo obrigatório"
                               InputType="InputType.Email"
-                              Required
-                              RequiredError="Informe o e-mail"
-                              Validation="@(new EmailAddressAttribute { ErrorMessage = "E-mail inválido" })" />
+                              @bind-Value="InputModel.Email"
+                              For="@(() => InputModel.Email)"/>
 
                 <MudTextField T="string"
                               Label="Senha"
+                              HelperText="Campo obrigatório"
                               InputType="InputType.Password"
-                              Required
-                              RequiredError="Informe a senha" />
-            </MudForm>
+                              @bind-Value="InputModel.Password"
+                              For="@(() => InputModel.Password)" />
 
-            <div class="d-flex mt-8">
-                <MudButton Variant="Variant.Outlined" Color="Color.Primary">Registrar</MudButton>
-                <MudSpacer />
-                <MudButton Href="/login">Já tenho uma conta</MudButton>
-            </div>
+                <div class="d-flex mt-8">
+                    @if (IsBusy)
+                    {
+                        <MudProgressCircular Color="Color.Info" Indeterminate="true" />
+                    }
+                    else
+                    {
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Registrar</MudButton>
+                        <MudSpacer />
+                        <MudButton Href="/login">Já tenho uma conta</MudButton>
+                    }
+                </div>
+            </EditForm>
         </MudPaper>
     </MudItem>
 </MudGrid>
