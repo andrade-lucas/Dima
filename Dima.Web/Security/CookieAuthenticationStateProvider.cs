@@ -34,7 +34,7 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory clientFactory)
         return new AuthenticationState(user);
     }
 
-    public void NotifyAuthenticationStateChanged()
+    public void NotifyAuthenticationStateChanged() => NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     {
         base.NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
