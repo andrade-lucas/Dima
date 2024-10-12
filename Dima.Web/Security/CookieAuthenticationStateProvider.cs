@@ -66,7 +66,7 @@ public class CookieAuthenticationStateProvider(IHttpClientFactory clientFactory)
         RoleClaim[]? roles;
         try
         {
-            roles = await _client.GetFromJsonAsync<RoleClaim[]>("/v1/identity/roles");
+            roles = await _client.GetFromJsonAsync<RoleClaim[]?>("/v1/identity/roles");
         }
         catch (Exception e)
         {
