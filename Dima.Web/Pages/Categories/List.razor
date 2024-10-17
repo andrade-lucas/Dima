@@ -39,6 +39,11 @@
             <CellTemplate>
                 <MudStack Row>
                     <MudIconButton 
+                        Icon="@Icons.Material.Filled.Edit" 
+                        Color="Color.Info" 
+                        Href="@($"/categorias/editar/{context.Item.Id}")" />
+
+                    <MudIconButton 
                         Icon="@Icons.Material.Filled.Delete" 
                         Color="Color.Error"
                         OnClick="() => OnDeleteButtonClickedAsync(context.Item.Id, context.Item.Title)" />
