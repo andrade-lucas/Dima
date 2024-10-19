@@ -1,7 +1,5 @@
 ﻿using Dima.Core.Handlers;
-using Dima.Core.Models;
 using Dima.Core.Requests.Categories;
-using Dima.Core.Responses;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -37,13 +35,25 @@ public partial class EditCategoryPage : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         IsBusy = true;
+        GetCategoryByIdRequest? request = null;
 
         try
         {
-            var request = new GetCategoryByIdRequest { Id = long.Parse(Id) };
+            request = new GetCategoryByIdRequest { Id = long.Parse(Id) };
+        }
+        catch
+        {
+            Snackbar.Add("Parâmetro inválido", Severity.Error);
+        }
+
+        if (request == null)
+            return;
+
+        try
+        {
             var result = await Handler.GetByIdAsync(request);
 
-            if (result is { IsSuccess: true, Data: not null})
+            if (result is { IsSuccess: true, Data: not null })
             {
                 InputModel = new UpdateCategoryRequest
                 {
