@@ -1,5 +1,4 @@
 using Dima.Api.Common.Api;
-using Dima.Api.Models;
 using Dima.Core;
 using Dima.Core.Handlers;
 using Dima.Core.Models;
@@ -23,9 +22,9 @@ public class GetAllCategoriesEndpoint : IEndpoint
 
     public static async Task<IResult> HandleAsync(
         ClaimsPrincipal user,
-        ICategoryHandler handler, 
-        [FromQuery]int pageNumber = Configuration.DefaultPageNumber, 
-        [FromQuery]int pageSize = Configuration.DefaultPageSize
+        ICategoryHandler handler,
+        [FromQuery] int pageNumber = Configuration.DefaultPageNumber,
+        [FromQuery] int pageSize = Configuration.DefaultPageSize
     )
     {
         var request = new GetAllCategoriesRequest
