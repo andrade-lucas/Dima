@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Dima.Api.Handlers;
 
 public class CategoryHandler(AppDbContext context) : ICategoryHandler
-{    
+{
     public async Task<Response<Category?>> CreateAsync(CreateCategoryRequest request)
     {
         try
@@ -66,7 +66,7 @@ public class CategoryHandler(AppDbContext context) : ICategoryHandler
                 .AsNoTracking()
                 .Where(x => x.UserId == request.UserId)
                 .OrderBy(x => x.Title);
-                
+
             var categories = await query
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)

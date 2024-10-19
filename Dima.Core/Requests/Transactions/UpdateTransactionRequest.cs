@@ -1,12 +1,12 @@
-using System.ComponentModel.DataAnnotations;
 using Dima.Core.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Dima.Core.Requests.Transactions;
 
 public class UpdateTransactionRequest : Request
 {
     public long Id { get; set; }
-    
+
     [Required(ErrorMessage = "Título inválido")]
     public string Title { get; set; } = string.Empty;
 
@@ -18,7 +18,7 @@ public class UpdateTransactionRequest : Request
 
     [Required(ErrorMessage = "Categoria inválida")]
     public long CategoryId { get; set; }
-    
+
     [Required(ErrorMessage = "Data inválida")]
     public DateTime? PaidOrReceivedAt { get; set; }
 }
