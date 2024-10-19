@@ -1,11 +1,12 @@
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Dima.Core.Handlers;
 using Dima.Web;
-using MudBlazor.Services;
+using Dima.Web.Handlers;
 using Dima.Web.Security;
 using Microsoft.AspNetCore.Components.Authorization;
-using Dima.Core.Handlers;
-using Dima.Web.Handlers;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
+using System.Globalization;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 

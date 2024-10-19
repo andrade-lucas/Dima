@@ -21,7 +21,7 @@ public class CategoryMapping : IEntityTypeConfiguration<Category>
             .IsRequired(false)
             .HasColumnType("NVARCHAR")
             .HasMaxLength(255);
-            
+
         builder.Property(x => x.UserId)
             .IsRequired()
             .HasColumnType("VARCHAR")
