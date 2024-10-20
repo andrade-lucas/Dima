@@ -96,8 +96,8 @@ public class TransactionHandler(AppDbContext context) : ITransactionHandler
                 .AsNoTracking()
                 .Where(x =>
                     x.UserId == request.UserId
-                    && x.CreatedAt >= request.StartDate
-                    && x.CreatedAt <= request.EndDate)
+                    && x.PaidOrReceivedAt >= request.StartDate
+                    && x.PaidOrReceivedAt <= request.EndDate)
                 .OrderBy(x => x.Title);
 
             var transactions = await query
