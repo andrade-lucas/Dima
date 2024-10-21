@@ -10,7 +10,14 @@
         <MudLayout>
             <MudAppBar>
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleDrawer" />
-                Dima
+                
+                <MudLink Href="/" Color="Color.Inherit" Typo="Typo.h5" Underline="Underline.None">
+                    Dima
+                </MudLink>
+                <MudSpacer />
+                <MudButton Href="/lancamentos/adicionar" Variant="Variant.Text" Color="Color.Inherit" StartIcon="@Icons.TwoTone.Add">
+                    Novo Lançamento
+                </MudButton>
                 <MudSpacer />
                 <MudText Typo="Typo.caption">
                     @context.User.Identity?.Name
