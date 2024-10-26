@@ -1,4 +1,6 @@
 ﻿using Dima.Api.Data;
+using Dima.Core.Common.Extensions;
+using Dima.Core.Enums;
 using Dima.Core.Handlers;
 using Dima.Core.Models.Reports;
 using Dima.Core.Requests.Reports;
@@ -28,9 +30,34 @@ public class ReportHandler(AppDbContext context) : IReportHandler
         }
     }
 
-    public Task<Response<FinancialSummary?>> GetFinancialSummaryReportAsync(GetFinancialSummaryRequest request)
+    public async Task<Response<FinancialSummary?>> GetFinancialSummaryReportAsync(GetFinancialSummaryRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var startDate = DateTime.Now.StartOfMonth();
+            var data = await context
+                .Transactions
+                .AsNoTracking()
+                .Where(x =>
+                    x.UserId == request.UserId
+                    && x.PaidOrReceivedAt >= startDate
+                    && x.PaidOrReceivedAt <= DateTime.Now
+                )
+                .GroupBy(x => true)
+                .Select(s => new FinancialSummary(
+                    request.UserId,
+                    s.Where(w => w.Type == ETransactionType.Deposit).Sum(t => t.Amount),
+                    s.Where(w => w.Type == ETransactionType.Withdraw).Sum(t => t.Amount)
+                ))
+                .FirstOrDefaultAsync();
+
+            return new Response<FinancialSummary?>(data);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return new Response<FinancialSummary?>(null, 500, "Não foi possível obter o resultado financeiro");
+        }
     }
 
     public async Task<Response<List<IncomesAndExpenses>?>> GetIncomesAndExpensesReportAsync(GetIncomesAndExpensesRequest request)
