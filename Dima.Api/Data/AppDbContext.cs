@@ -1,5 +1,6 @@
 using Dima.Api.Models;
 using Dima.Core.Models;
+using Dima.Core.Models.Reports;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +22,24 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<Transaction> Transactions { get; set; } = null!;
 
+    public DbSet<IncomesAndExpenses> IncomesAndExpenses { get; set; } = null!;
+    public DbSet<IncomesByCategory> IncomesByCategories { get; set; } = null!;
+    public DbSet<ExpensesByCategory> ExpensesByCategories { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        modelBuilder.Entity<IncomesAndExpenses>()
+            .HasNoKey()
+            .ToView("VwGetIncomesAndExpenses");
+
+        modelBuilder.Entity<IncomesByCategory>()
+            .HasNoKey()
+            .ToView("VwGetIncomesByCategory");
+
+        modelBuilder.Entity<ExpensesByCategory>()
+            .HasNoKey()
+            .ToView("VwGetExpesesByCategory");
     }
 }
