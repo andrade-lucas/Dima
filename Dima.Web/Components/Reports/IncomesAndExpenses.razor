@@ -1,0 +1,18 @@
+﻿@inherits IncomesAndExpensesComponent
+
+@if (Series is not null)
+{
+    <MudChart ChartType="ChartType.Line"
+              ChartSeries="Series"
+              ChartOptions="Options"
+              XAxisLabels="Labels.ToArray()"
+              CanHideSeries="true"
+              Width="100%"
+              Height="350px" />
+}
+else
+{
+    <div class="d-flex align-center justify-center" style="height: 350px">
+        <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+    </div>
+}
