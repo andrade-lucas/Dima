@@ -37,7 +37,7 @@ namespace Dima.Api.Migrations
                     Number = table.Column<string>(type: "CHAR(8)", maxLength: 8, nullable: false),
                     Title = table.Column<string>(type: "NVARCHAR(80)", maxLength: 80, nullable: false),
                     Description = table.Column<string>(type: "NVARCHAR(255)", maxLength: 255, nullable: true),
-                    Nots = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "BIT", nullable: false),
                     Amount = table.Column<decimal>(type: "MONEY", nullable: false)
                 },
