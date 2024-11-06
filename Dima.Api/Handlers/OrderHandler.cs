@@ -187,7 +187,7 @@ public class OrderHandler(AppDbContext context) : IOrderHandler
             order = await context
                 .Orders
                 .Include(x => x.Product)
-                .Include(x => x.VoucherId)
+                .Include(x => x.Voucher)
                 .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Id == request.Id);
 
             if (order is null)
@@ -223,7 +223,7 @@ public class OrderHandler(AppDbContext context) : IOrderHandler
         }
     }
 
-    public async Task<Response<Order?>> RefundAsync(RefuncOrderRequest request)
+    public async Task<Response<Order?>> RefundAsync(RefundOrderRequest request)
     {
         Order? order;
         try
