@@ -33,13 +33,14 @@ public partial class HomePage : ComponentBase
         {
             var result = await Handler.GetFinancialSummaryReportAsync(new GetFinancialSummaryRequest());
 
-            if (!result.IsSuccess || result.Data == null)
+            if (result.IsSuccess)
             {
-                Snackbar.Add("Não foi possível carregar os dados", Severity.Error);
+                FinancialSummary = result.Data ?? new FinancialSummary("", 0, 0);
                 return;
             }
 
-            FinancialSummary = result.Data;
+            FinancialSummary = new FinancialSummary("", 0, 0);
+            Snackbar.Add("Não foi possível carregar os dados", Severity.Error);
         }
         catch (Exception ex)
         {
