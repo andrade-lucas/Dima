@@ -61,6 +61,16 @@ public partial class OrderDetailsPage : ComponentBase
 
     #endregion
 
+    #region Public Methods
+
+    public void RefreshState(Order order)
+    {
+        Order = order;
+        StateHasChanged();
+    }
+
+    #endregion
+
     #region Private Methods
 
     private async Task PayOrderAsync()
