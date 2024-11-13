@@ -9,6 +9,8 @@ public static class Configuration
 
     public static string BackendUrl { get; set; } = "http://localhost:5227";
 
+    public static string StripePublicKey { get; set; } = string.Empty;
+
     public static MudTheme Theme = new()
     {
         Typography = new Typography
