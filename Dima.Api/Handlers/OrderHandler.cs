@@ -3,12 +3,13 @@ using Dima.Core.Enums;
 using Dima.Core.Handlers;
 using Dima.Core.Models;
 using Dima.Core.Requests.Orders;
+using Dima.Core.Requests.Stripe;
 using Dima.Core.Responses;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dima.Api.Handlers;
 
-public class OrderHandler(AppDbContext context) : IOrderHandler
+public class OrderHandler(AppDbContext context, IStripeHandler stripeHandler) : IOrderHandler
 {
     public async Task<Response<Order?>> CancelAsync(CancelOrderRequest request)
     {
@@ -188,7 +189,7 @@ public class OrderHandler(AppDbContext context) : IOrderHandler
                 .Orders
                 .Include(x => x.Product)
                 .Include(x => x.Voucher)
-                .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Id == request.Id);
+                .FirstOrDefaultAsync(x => x.UserId == request.UserId && x.Number == request.Number);
 
             if (order is null)
                 return new Response<Order?>(null, 404, "Pedido não encontrado");
@@ -205,6 +206,32 @@ public class OrderHandler(AppDbContext context) : IOrderHandler
                     return new Response<Order?>(null, 400, "Este pedido já foi reembolsado");
                 default:
                     return new Response<Order?>(null, 400, "Este pedido não tem um status válido");
+            }
+
+            try
+            {
+                var getTransactionsRequest = new GetTransactionsByOrderNumberRequest
+                {
+                    Number = order.Number,
+                    UserId = request.UserId,
+                };
+                var transactions = await stripeHandler.GetTransactionsByOrderNumberAsync(getTransactionsRequest);
+
+                if (!transactions.IsSuccess || transactions.Data == null)
+                    return new Response<Order?>(null, 500, "Não foi possível localizar o pagamento");
+
+                if (transactions.Data.Any(x => x.Refunded))
+                    return new Response<Order?>(null, 400, "Esse pedido já foi estornado");
+
+                if (!transactions.Data.Any(x => x.Paid))
+                    return new Response<Order?>(null,400, "Pagamento não localizado");
+
+                request.ExternalReference = transactions.Data[0].Id;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return new Response<Order?>(null, 500, "Erro ao verificar pagamento");
             }
 
             order.Status = EOrderStatus.Paid;
