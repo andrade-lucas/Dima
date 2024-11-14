@@ -10,7 +10,7 @@ public class CreateSessionEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
     {
-        app.MapPost("/", HandleAsync)
+        app.MapPost("/session", HandleAsync)
             .WithName("Stripe: Create Session")
             .WithSummary("Cria uma nova sessão do Stripe")
             .WithOrder(1)

@@ -12,7 +12,7 @@ public class PayOrderEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
     {
-        app.MapPost("/{id}/pay", HandleAsync)
+        app.MapPost("/{number}/pay", HandleAsync)
             .WithName("Order: Pay an Order")
             .WithSummary("Paga um pedido")
             .WithDescription("Paga um pedido")
@@ -23,11 +23,11 @@ public class PayOrderEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         IOrderHandler handler, 
         ClaimsPrincipal user,
-        [FromRoute] long id,
+        [FromRoute] string number,
         [FromBody] PayOrderRequest request
     )
     {
-        request.Id = id;
+        request.Number = number;
         request.UserId = user.Identity!.Name ?? string.Empty;
 
         var result = await handler.PayAsync(request);
