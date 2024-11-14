@@ -1,8 +1,10 @@
 ﻿using Dima.Core.Handlers;
 using Dima.Core.Models;
 using Dima.Core.Requests.Orders;
+using Dima.Core.Requests.Stripe;
 using Dima.Web.Pages.Orders;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace Dima.Web.Components.Orders;
@@ -22,10 +24,16 @@ public class OrderActionComponent : ComponentBase
     #region Services
 
     [Inject]
+    public IJSRuntime JSRuntime { get; set; } = null!;
+
+    [Inject]
     public IDialogService DialogService { get; set; } = null!;
 
     [Inject]
     public IOrderHandler OrderHandler { get; set; } = null!;
+
+    [Inject]
+    public IStripeHandler StripeHandler { get; set; } = null!;
 
     [Inject]
     public ISnackbar Snackbar { get; set; } = null!;
@@ -98,18 +106,31 @@ public class OrderActionComponent : ComponentBase
 
     private async Task PayOrderAsync()
     {
-        var request = new PayOrderRequest
+        var request = new CreateSessionRequest
         {
-            Id = Order.Id,
+            OrderNumber = Order.Number,
+            ProductTitle = Order.Product.Title,
+            ProductDescription = Order.Product.Description,
+            OrderTotal = (long)Math.Round(Order.Total * 100, 2)
         };
-        var result = await OrderHandler.PayAsync(request);
-        if (result.IsSuccess && result.Data != null)
+
+        try
         {
-            Snackbar.Add(result.Message, Severity.Success);
-            Parent.RefreshState(result.Data);
+            var result = await StripeHandler.CreateSessionAsync(request);
+            if (!result.IsSuccess || result.Data == null)
+            {
+                Snackbar.Add(result.Message, Severity.Error);
+                return;
+            }
+
+            await JSRuntime.InvokeVoidAsync("checkout", Configuration.StripePublicKey, result.Data);
         }
-        else
-            Snackbar.Add(result.Message, Severity.Error);
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            Snackbar.Add("Não foi possível iniciar a sessão com o Stripe", Severity.Error);
+            return;
+        }
     }
 
     private async Task RefundOrderAsync()
