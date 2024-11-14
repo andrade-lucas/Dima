@@ -63,10 +63,7 @@ public partial class CheckoutPage : ComponentBase
         await GetVoucher();
 
         IsValid = true;
-        Total = Product!.Price - (Voucher?.Amount ?? 0);
-        
-        if (Total < 0)
-            Total = 0;
+        CalculateOrderTotal();
     }
 
     #endregion
@@ -102,9 +99,23 @@ public partial class CheckoutPage : ComponentBase
         }
     }
 
+    public async Task OnApplyVoucherAsync()
+    {
+        await GetVoucher();
+        CalculateOrderTotal();
+    }
+
     #endregion
 
     #region Private methods
+
+    private void CalculateOrderTotal()
+    {
+        Total = Product!.Price - (Voucher?.Amount ?? 0);
+
+        if (Total < 0)
+            Total = 0;
+    }
 
     private async Task GetProduct()
     {
