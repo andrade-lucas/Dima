@@ -36,6 +36,7 @@ builder.Services.AddTransient<IProductHandler, ProductHandler>();
 builder.Services.AddTransient<IVoucherHandler, VoucherHandler>();
 builder.Services.AddTransient<IOrderHandler, OrderHandler>();
 builder.Services.AddTransient<IReportHandler, ReportHandler>();
+builder.Services.AddTransient<IStripeHandler, StripeHandler>();
 
 builder.Services.AddLocalization();
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
